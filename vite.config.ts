@@ -8,16 +8,25 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        middlewareMode: false,
+        allowedHosts: 'all',
       },
       plugins: [react()],
+      preview: {
+        port: 3001,
+        host: '0.0.0.0',
+        allowedHosts: 'all',
+      },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+        'process.env.PUBLIC_URL': JSON.stringify('/')
       },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
-      }
+      },
+      ssr: false
     };
 });

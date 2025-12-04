@@ -24,7 +24,7 @@ const MatchingResults: React.FC<MatchingResultsProps> = ({ proposals, onSelect, 
     <div>
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-brand-secondary">マッチング結果</h1>
-        <p className="mt-2 text-md text-gray-600">
+        <p className="mt-2 text-md text-brand-light">
           ご要件に基づいた上位の提案です。一つ選択して詳細なドキュメントを生成してください。
         </p>
       </div>
@@ -37,11 +37,11 @@ const MatchingResults: React.FC<MatchingResultsProps> = ({ proposals, onSelect, 
               <h2 className="text-xl font-bold text-brand-secondary">{proposal.productNameSuggestion}</h2>
               <ScoreBadge score={proposal.score} />
             </div>
-            <p className="text-gray-600 mb-4 flex-grow">{proposal.conceptSummary}</p>
+            <p className="text-brand-light mb-4 flex-grow">{proposal.conceptSummary}</p>
             
             <div className="mb-6">
                 <h3 className="font-semibold text-sm text-gray-800 mb-2">主な特徴:</h3>
-                <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <ul className="list-disc list-inside text-sm text-brand-light space-y-1">
                     {proposal.keyFeatures.map((feature, index) => <li key={index}>{feature}</li>)}
                 </ul>
             </div>

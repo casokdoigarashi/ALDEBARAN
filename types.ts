@@ -58,6 +58,8 @@ export interface Material {
   origin: string; // Added: Production area/region
   country: string; // Added: Country of origin
   sustainability: string;
+  isOrganic?: boolean; // Added: Organic certification flag
+  organicCertifications?: string[]; // Added: Organic certification types
 }
 
 export interface ScoredProposal {

@@ -122,7 +122,7 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
             <h1 className="text-3xl font-bold text-brand-secondary">自社原料データベース</h1>
-            <p className="mt-2 text-gray-600">AI提案生成時に優先して使用される自社取り扱い原料の一覧です。</p>
+            <p className="mt-2 text-brand-light">AI提案生成時に優先して使用される自社取り扱い原料の一覧です。</p>
         </div>
         <Button onClick={() => setIsEditing(true)}>
             + 新規原料登録
@@ -130,14 +130,14 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
       </div>
 
       {/* Control Bar */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+      <div className="bg-white p-4 rounded-sm shadow-sm border border-brand-accent mb-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
         <div className="relative w-full xl:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <SearchIcon className="h-5 w-5 text-gray-400" />
             </div>
             <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-brand-primary focus:border-brand-primary sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-sm leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-brand-primary focus:border-brand-primary sm:text-sm"
                 placeholder="商品名、INCI、メーカー、特徴で検索..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -148,11 +148,11 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
             {/* Filter */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
                 <FilterIcon className="h-5 w-5 text-gray-500 flex-shrink-0" />
-                <span className="text-sm text-gray-600 whitespace-nowrap">カテゴリ:</span>
+                <span className="text-sm text-brand-light whitespace-nowrap">カテゴリ:</span>
                 <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="block w-full sm:w-40 pl-3 pr-8 py-2 text-base border-gray-300 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm rounded-md"
+                    className="block w-full sm:w-40 pl-3 pr-8 py-2 text-base border-gray-300 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm rounded-sm"
                 >
                     {categories.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
@@ -167,8 +167,8 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
                 ) : (
                     <SortDescIcon className="h-5 w-5 text-gray-500 flex-shrink-0" />
                 )}
-                <span className="text-sm text-gray-600 whitespace-nowrap">並び替え:</span>
-                <div className="flex rounded-md shadow-sm">
+                <span className="text-sm text-brand-light whitespace-nowrap">並び替え:</span>
+                <div className="flex rounded-sm shadow-sm">
                     <select
                         value={sortKey}
                         onChange={(e) => setSortKey(e.target.value as SortKey)}
@@ -184,7 +184,7 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
                     </select>
                     <button
                         onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                        className="-ml-px relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
+                        className="-ml-px relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-brand-bg text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
                         title={sortOrder === 'asc' ? "昇順 (クリックで降順)" : "降順 (クリックで昇順)"}
                     >
                         {sortOrder === 'asc' ? '昇順' : '降順'}
@@ -193,17 +193,17 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
             </div>
 
             {/* View Mode */}
-            <div className="flex bg-gray-100 rounded-md p-1 border border-gray-200 flex-shrink-0">
+            <div className="flex bg-gray-100 rounded-sm p-1 border border-brand-accent flex-shrink-0">
                 <button
                     onClick={() => setViewMode('table')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'table' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`p-2 rounded-sm transition-colors ${viewMode === 'table' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-brand-secondary'}`}
                     title="リスト表示"
                 >
                     <ViewListIcon className="w-5 h-5" />
                 </button>
                 <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`p-2 rounded-sm transition-colors ${viewMode === 'grid' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-brand-secondary'}`}
                     title="グリッド表示"
                 >
                     <ViewGridIcon className="w-5 h-5" />
@@ -214,7 +214,7 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
 
       {/* Content Area */}
       {sortedMaterials.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
+          <div className="text-center py-12 bg-white rounded-sm border-2 border-dashed border-gray-300">
               <p className="text-gray-500 mb-4">
                   {materials.length === 0 ? "登録されている原料はありません" : "条件に一致する原料が見つかりませんでした"}
               </p>
@@ -224,51 +224,51 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
           </div>
       ) : viewMode === 'table' ? (
           // Table View
-          <div className="bg-white shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto">
+          <div className="bg-white shadow overflow-hidden border-b border-brand-accent sm:rounded-sm overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-brand-bg">
                       <tr>
                           <th 
                             scope="col" 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
+                            className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
                             onClick={() => handleHeaderClick('tradeName')}
                           >
                               商品名 / INCI <SortIconDisplay currentKey="tradeName" />
                           </th>
                           <th 
                             scope="col" 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
+                            className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
                             onClick={() => handleHeaderClick('category')}
                           >
                               カテゴリ <SortIconDisplay currentKey="category" />
                           </th>
                           <th 
                             scope="col" 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
+                            className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
                             onClick={() => handleHeaderClick('manufacturer')}
                           >
                               メーカー / 産地 <SortIconDisplay currentKey="manufacturer" />
                           </th>
                           <th 
                             scope="col" 
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
+                            className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none group"
                             onClick={() => handleHeaderClick('price')}
                           >
                               価格 / コスト <SortIconDisplay currentKey="price" />
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider">
                               推奨濃度
                           </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-serif-jp font-serif-jp font-medium text-gray-500 uppercase tracking-wider">
                               特徴
                           </th>
                       </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                       {sortedMaterials.map((mat) => (
-                          <tr key={mat.id} className="hover:bg-gray-50 transition-colors">
+                          <tr key={mat.id} className="hover:bg-brand-bg transition-colors">
                               <td className="px-6 py-4">
-                                  <div className="text-sm font-medium text-brand-secondary">{mat.tradeName}</div>
+                                  <div className="text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary">{mat.tradeName}</div>
                                   <div className="text-xs text-gray-500">{mat.inciName}</div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
@@ -290,7 +290,7 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
                               <td className="px-6 py-4">
                                   <div className="flex flex-wrap gap-1">
                                       {mat.benefits.slice(0, 3).map((b, i) => (
-                                          <span key={i} className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs whitespace-nowrap">
+                                          <span key={i} className="bg-gray-100 text-brand-light px-1.5 py-0.5 rounded text-xs whitespace-nowrap">
                                               {b}
                                           </span>
                                       ))}
@@ -311,36 +311,36 @@ const MaterialDatabase: React.FC<MaterialDatabaseProps> = ({ materials, onAddMat
                 <Card key={mat.id} className="flex flex-col h-full hover:shadow-xl transition-shadow duration-200">
                     <div className="flex justify-between items-start mb-2">
                          <h3 className="text-xl font-bold text-brand-secondary">{mat.tradeName}</h3>
-                         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{mat.category}</span>
+                         <span className="text-xs bg-gray-100 text-brand-light px-2 py-1 rounded">{mat.category}</span>
                     </div>
                     <p className="text-sm text-gray-500 mb-4 font-mono">{mat.inciName}</p>
                     
                     <div className="flex-grow">
-                        <p className="text-gray-700 text-sm mb-4 line-clamp-3">{mat.description}</p>
+                        <p className="text-brand-secondary text-sm mb-4 line-clamp-3">{mat.description}</p>
                         
                         <div className="space-y-2 text-sm">
                             <div className="flex items-start">
-                                <span className="font-semibold text-gray-600 w-24 flex-shrink-0">効果効能:</span>
+                                <span className="font-semibold text-brand-light w-24 flex-shrink-0">効果効能:</span>
                                 <div className="flex flex-wrap gap-1">
                                     {mat.benefits.map((b, i) => (
-                                        <span key={i} className="bg-green-50 text-brand-primary px-1.5 py-0.5 rounded text-xs">{b}</span>
+                                        <span key={i} className="bg-brand-bg text-brand-primary px-1.5 py-0.5 rounded text-xs">{b}</span>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex">
-                                <span className="font-semibold text-gray-600 w-24">メーカー:</span>
+                                <span className="font-semibold text-brand-light w-24">メーカー:</span>
                                 <span>{mat.manufacturer}</span>
                             </div>
                              <div className="flex">
-                                <span className="font-semibold text-gray-600 w-24">推奨濃度:</span>
+                                <span className="font-semibold text-brand-light w-24">推奨濃度:</span>
                                 <span>{mat.recommendedConcentration}</span>
                             </div>
                              <div className="flex">
-                                <span className="font-semibold text-gray-600 w-24">原産国/産地:</span>
+                                <span className="font-semibold text-brand-light w-24">原産国/産地:</span>
                                 <span>{mat.country} / {mat.origin}</span>
                             </div>
                              <div className="flex">
-                                <span className="font-semibold text-gray-600 w-24">価格:</span>
+                                <span className="font-semibold text-brand-light w-24">価格:</span>
                                 <span>{mat.price}</span>
                             </div>
                         </div>

@@ -16,8 +16,12 @@ const getAiClientAndModule = async () => {
   if (!ai) {
     // Dynamically import the module.
     genAIModule = await import('@google/genai');
-    // Assume API key is set in the environment.
-    ai = new genAIModule.GoogleGenAI({ apiKey: process.env.API_KEY });
+    // Get API key from browser window object (injected by server) or environment variable
+    let apiKey = (window as any).__GEMINI_API_KEY__ || import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('Google Gemini API key is not set. Please set VITE_GEMINI_API_KEY environment variable.');
+    }
+    ai = new genAIModule.GoogleGenAI({ apiKey });
   }
   return { ai, genAIModule };
 };
@@ -316,8 +320,22 @@ export const parseMaterialData = async (input: File | string, type: 'text' | 'fi
                 { text: promptText }
             ]
         };
+    } else if (type === 'url') {
+        // URL の場合はサーバーから内容を取得
+        try {
+            const response = await fetch(`/api/fetch-url?url=${encodeURIComponent(input as string)}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch URL content');
+            }
+            const data = await response.json();
+            promptText += `\n\n入力データ:\n${data.content}`;
+            contents = promptText;
+        } catch (error) {
+            console.error('Error fetching URL:', error);
+            throw new Error('URLからのコンテンツ取得に失敗しました。');
+        }
     } else {
-        // text or url
+        // text
         promptText += `\n\n入力データ:\n${input}`;
         contents = promptText;
     }

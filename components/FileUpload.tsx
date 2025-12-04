@@ -62,7 +62,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onSubmit, onBack }) => {
   return (
     <Card title="ドキュメントから抽出">
       <div 
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ${isDragging ? 'border-brand-primary bg-green-50' : 'border-gray-300'}`}
+        className={`border-2 border-dashed rounded-sm p-8 text-center transition-colors duration-200 ${isDragging ? 'border-brand-primary bg-brand-bg' : 'border-gray-300'}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
@@ -77,10 +77,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onSubmit, onBack }) => {
         />
         <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
             <DocumentTextIcon className="w-12 h-12 text-gray-400"/>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-brand-light">
                 <span className="font-semibold text-brand-primary">クリックしてアップロード</span>またはPDFファイルをここにドラッグ＆ドロップしてください。
             </p>
-            {file && <p className="mt-2 text-sm font-medium text-brand-secondary">{file.name}</p>}
+            {file && <p className="mt-2 text-sm font-serif-jp font-medium text-brand-secondary">{file.name}</p>}
         </label>
       </div>
 
@@ -103,7 +103,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onSubmit, onBack }) => {
         />
       </div>
 
-      <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+      <div className="mt-8 pt-6 border-t border-brand-accent flex justify-between items-center">
         <Button type="button" variant="outline" onClick={onBack}>
           戻る
         </Button>

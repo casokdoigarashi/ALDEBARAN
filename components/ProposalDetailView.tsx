@@ -17,7 +17,7 @@ interface ProposalDetailViewProps {
 const ProposalSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="mb-8">
     <h3 className="text-xl font-bold text-brand-secondary border-b-2 border-brand-light pb-2 mb-4">{title}</h3>
-    <div className="text-gray-700 prose max-w-none">{children}</div>
+    <div className="text-brand-secondary prose max-w-none">{children}</div>
   </div>
 );
 
@@ -46,11 +46,11 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
     <div id={id}>
       {/* Executive Summary Section */}
       {content.executiveSummary && (
-        <div className="mb-8 p-6 bg-green-50 rounded-lg border border-brand-light shadow-sm">
+        <div className="mb-8 p-6 bg-brand-bg rounded-sm border border-brand-light shadow-sm">
             <h3 className="text-lg font-bold text-brand-primary mb-3 flex items-center gap-2">
                 <span className="text-2xl">✨</span> エグゼクティブ・サマリー
             </h3>
-            <p className="text-gray-800 text-lg leading-relaxed font-medium">
+            <p className="text-gray-800 text-lg leading-relaxed font-serif-jp font-serif-jp font-medium">
                 {content.executiveSummary}
             </p>
         </div>
@@ -58,7 +58,7 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
 
       {/* Client Research Section (Added) */}
       {content.clientResearch && (
-        <div className="mb-10 border border-blue-200 rounded-lg bg-blue-50 overflow-hidden shadow-sm no-print">
+        <div className="mb-10 border border-blue-200 rounded-sm bg-blue-50 overflow-hidden shadow-sm no-print">
             <div className="bg-blue-100/50 border-b border-blue-200 px-4 py-3">
                 <h3 className="text-lg font-semibold text-blue-800 flex items-center">
                     <BuildingOfficeIcon className="w-5 h-5 mr-2" />
@@ -103,7 +103,7 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
       <ProposalSection title="主要成分">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b bg-gray-50">
+            <tr className="border-b bg-brand-bg">
               <th className="py-2 px-2">INCI名</th>
               <th className="px-2">一般名</th>
               <th className="px-2">配合範囲</th>
@@ -112,10 +112,10 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
           </thead>
           <tbody>
             {content.mainIngredients.map((ing, i) => (
-              <tr key={i} className={`border-b border-gray-200 ${ing.isInternalMaterial ? 'bg-green-50' : ''}`}>
-                <td className="py-2 px-2 font-medium">
+              <tr key={i} className={`border-b border-brand-accent ${ing.isInternalMaterial ? 'bg-brand-bg' : ''}`}>
+                <td className="py-2 px-2 font-serif-jp font-serif-jp font-medium">
                     {ing.inci}
-                    {ing.isInternalMaterial && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-primary text-white">自社原料</span>}
+                    {ing.isInternalMaterial && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-serif-jp font-serif-jp font-medium bg-brand-primary text-white">自社原料</span>}
                 </td>
                 <td className="px-2">{ing.commonName}</td>
                 <td className="px-2">{ing.percentageRange}</td>
@@ -128,14 +128,14 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
       <ProposalSection title="パッケージ提案">
           <div className="grid gap-4">
             {content.packageProposals.map((pkg, i) => (
-                <div key={i} className="p-4 bg-gray-50 rounded-md border border-gray-100">
+                <div key={i} className="p-4 bg-brand-bg rounded-sm border border-gray-100">
                     <h4 className="font-bold text-gray-800 mb-2">{pkg.name}</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                        <p><span className="font-semibold text-gray-600">仕様:</span> {pkg.capacity} {pkg.material}</p>
-                        <p><span className="font-semibold text-gray-600">装飾:</span> {pkg.decoration}</p>
-                        <p><span className="font-semibold text-gray-600">MOQ:</span> {pkg.moq}</p>
-                        <p><span className="font-semibold text-gray-600">納期:</span> {pkg.leadTime}</p>
-                        <p><span className="font-semibold text-gray-600">概算コスト:</span> {pkg.costRange}</p>
+                        <p><span className="font-semibold text-brand-light">仕様:</span> {pkg.capacity} {pkg.material}</p>
+                        <p><span className="font-semibold text-brand-light">装飾:</span> {pkg.decoration}</p>
+                        <p><span className="font-semibold text-brand-light">MOQ:</span> {pkg.moq}</p>
+                        <p><span className="font-semibold text-brand-light">納期:</span> {pkg.leadTime}</p>
+                        <p><span className="font-semibold text-brand-light">概算コスト:</span> {pkg.costRange}</p>
                     </div>
                 </div>
             ))}
@@ -143,7 +143,7 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
       </ProposalSection>
       
       <ProposalSection title="製造 & コスト見積">
-          <div className="bg-white border border-gray-200 rounded-md p-4">
+          <div className="bg-white border border-brand-accent rounded-sm p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <span className="block text-sm font-semibold text-gray-500">想定ロットサイズ</span>
@@ -163,7 +163,7 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
       </ProposalSection>
 
       <ProposalSection title="薬事関連情報">
-        <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md border-l-4 border-yellow-400">{content.regulatoryNotes}</p>
+        <p className="text-sm text-brand-secondary bg-brand-bg p-3 rounded-sm border-l-4 border-yellow-400">{content.regulatoryNotes}</p>
       </ProposalSection>
 
       <ProposalSection title="次のステップ">
@@ -177,22 +177,22 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-brand-light pb-2 mb-4 gap-4">
           <h3 className="text-xl font-bold text-brand-secondary">メール下書き</h3>
           <div className="flex items-center gap-2">
-             <div className="flex bg-gray-100 p-1 rounded-md">
+             <div className="flex bg-gray-100 p-1 rounded-sm">
                  <button 
                     onClick={() => setEmailTone('standard')}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${emailTone === 'standard' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`px-3 py-1.5 text-xs font-serif-jp font-serif-jp font-medium rounded-sm transition-colors ${emailTone === 'standard' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-brand-secondary'}`}
                  >
                     標準
                  </button>
                  <button 
                     onClick={() => setEmailTone('formal')}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${emailTone === 'formal' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`px-3 py-1.5 text-xs font-serif-jp font-serif-jp font-medium rounded-sm transition-colors ${emailTone === 'formal' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-brand-secondary'}`}
                  >
                     フォーマル
                  </button>
                  <button 
                     onClick={() => setEmailTone('casual')}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${emailTone === 'casual' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`px-3 py-1.5 text-xs font-serif-jp font-serif-jp font-medium rounded-sm transition-colors ${emailTone === 'casual' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-500 hover:text-brand-secondary'}`}
                  >
                     親しみやすく
                  </button>
@@ -203,9 +203,20 @@ const ProposalContentDisplay: React.FC<{ content: ProposalContent, id: string }>
              </Button>
           </div>
         </div>
-        <div className="text-gray-700 prose max-w-none">
-          <div className="p-6 bg-blue-50/50 rounded-lg border border-blue-100 whitespace-pre-wrap font-sans text-sm leading-relaxed text-gray-800 shadow-inner">
-              {currentEmailContent}
+        <div className="text-brand-secondary prose max-w-none">
+          <div className="p-6 bg-blue-50/50 rounded-sm border border-blue-100 font-sans text-sm leading-relaxed text-gray-800 shadow-inner">
+              <div className="whitespace-pre-wrap space-y-4">
+                {currentEmailContent.split('\n\n').map((paragraph, idx) => (
+                  <p key={idx} className="mb-4">
+                    {paragraph.split('\n').map((line, lineIdx) => (
+                      <React.Fragment key={lineIdx}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </p>
+                ))}
+              </div>
           </div>
         </div>
       </div>
@@ -284,16 +295,16 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({ proposal, onBac
           <p className="text-gray-500">提案ID: {proposal.id}</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex rounded-md shadow-sm">
+          <div className="flex rounded-sm shadow-sm">
             <button
               onClick={() => setLanguage('jp')}
-              className={`px-4 py-2 rounded-l-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-2 focus:ring-brand-primary transition ${language === 'jp' ? 'bg-brand-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-4 py-2 rounded-l-md text-sm font-serif-jp font-serif-jp font-medium focus:z-10 focus:outline-none focus:ring-2 focus:ring-brand-primary transition ${language === 'jp' ? 'bg-brand-primary text-white' : 'bg-white text-brand-secondary hover:bg-brand-bg'}`}
             >
               日本語
             </button>
             <button
               onClick={() => setLanguage('en')}
-              className={`-ml-px px-4 py-2 rounded-r-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-2 focus:ring-brand-primary transition ${language === 'en' ? 'bg-brand-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`-ml-px px-4 py-2 rounded-r-md text-sm font-serif-jp font-serif-jp font-medium focus:z-10 focus:outline-none focus:ring-2 focus:ring-brand-primary transition ${language === 'en' ? 'bg-brand-primary text-white' : 'bg-white text-brand-secondary hover:bg-brand-bg'}`}
             >
               English
             </button>
@@ -304,17 +315,17 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({ proposal, onBac
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
             </Button>
             {exportOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+              <div className="absolute right-0 mt-2 w-56 rounded-sm shadow-sm bg-white ring-1 ring-black ring-opacity-5 z-10">
                 <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                  <button onClick={() => handleExport('pdf')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                  <button onClick={() => handleExport('pdf')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-brand-secondary hover:bg-gray-100" role="menuitem">
                     <PrinterIcon className="w-5 h-5" />
                     印刷 / PDFとして保存
                   </button>
-                  <button onClick={() => handleExport('word')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                  <button onClick={() => handleExport('word')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-brand-secondary hover:bg-gray-100" role="menuitem">
                     <DocumentDownloadIcon className="w-5 h-5" />
                     Word (.doc) としてダウンロード
                   </button>
-                  <button onClick={() => handleExport('gdocs')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                  <button onClick={() => handleExport('gdocs')} className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-brand-secondary hover:bg-gray-100" role="menuitem">
                      <ClipboardIcon className="w-5 h-5" />
                     {copyStatus || 'Google Docs用にコピー'}
                   </button>
@@ -325,11 +336,11 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({ proposal, onBac
         </div>
       </div>
 
-      <div id="printable-area" className="bg-white p-6 sm:p-8 rounded-md border shadow-sm">
+      <div id="printable-area" className="bg-white p-6 sm:p-8 rounded-sm border shadow-sm">
         {language === 'jp' ? <ProposalContentDisplay id="proposal-content-jp" content={proposal.jp} /> : <ProposalContentDisplay id="proposal-content-en" content={proposal.en} />}
       </div>
       
-      <div className="mt-8 pt-6 border-t border-gray-200 no-print">
+      <div className="mt-8 pt-6 border-t border-brand-accent no-print">
         <Button variant="outline" onClick={onBack}>
           マッチング結果に戻る
         </Button>

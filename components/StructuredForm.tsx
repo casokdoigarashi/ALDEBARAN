@@ -53,6 +53,8 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
   // Client Research State
   const [researchCompany, setResearchCompany] = useState('');
   const [researchUrl, setResearchUrl] = useState('');
+  const [researchInstagram, setResearchInstagram] = useState('');
+  const [researchX, setResearchX] = useState('');
   const [isResearching, setIsResearching] = useState(false);
   const [researchResult, setResearchResult] = useState<ClientResearch | null>(initialData?.clientResearch || null);
 
@@ -101,6 +103,21 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
       // In a real app, show an error toast
     } finally {
       setIsParsing(false);
+    }
+  };
+
+  const handleExtractSocialMedia = async () => {
+    if (!researchUrl.trim()) return;
+    try {
+      // Extract Instagram and X links from website
+      const response = await fetch(`/api/extract-social-media?url=${encodeURIComponent(researchUrl)}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.instagram) setResearchInstagram(data.instagram);
+        if (data.x) setResearchX(data.x);
+      }
+    } catch (error) {
+      console.error('Failed to extract social media links:', error);
     }
   };
 
@@ -173,61 +190,119 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
       <Card title="新規提案を作成">
 
         {/* Client Research Section */}
-        <div className="mb-8 border border-blue-200 rounded-lg bg-blue-50 overflow-hidden shadow-sm">
-             <div className="bg-blue-100 border-b border-blue-200 px-4 py-3">
-                 <h3 className="text-lg font-semibold text-blue-800 flex items-center">
+        <div className="mb-8 border border-brand-accent rounded-sm bg-brand-bg overflow-hidden shadow-sm">
+             <div className="bg-brand-light border-b border-brand-accent px-4 py-3">
+                 <h3 className="text-lg font-semibold text-brand-secondary flex items-center">
                      <BuildingOfficeIcon className="w-5 h-5 mr-2" />
                      顧客企業リサーチ (Google検索連携)
                  </h3>
              </div>
              <div className="p-6">
-                 <p className="text-sm text-blue-900 mb-4">
+                 <p className="text-sm text-brand-secondary mb-4">
                      クライアントの会社名やURLを入力すると、最新のニュースやSNS、ブランド動向をリサーチし、提案内容に反映させます。
                  </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-sm p-3 mb-4">
+                    <p className="text-xs text-blue-700 font-serif-jp">
+                        <strong>💡 「検索」ボタンについて：</strong> Web サイト URL を入力して「検索」ボタンをクリックすると、そのサイトから Instagram と X のリンクを自動検出して入力します。
+                    </p>
+                </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                      <div>
-                         <label className="block text-sm font-medium text-blue-900 mb-1">会社名 / ブランド名</label>
+                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">会社名 / ブランド名</label>
                          <input 
                             type="text" 
-                            className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
                             placeholder="例: 株式会社アルデバラン"
                             value={researchCompany}
                             onChange={(e) => setResearchCompany(e.target.value)}
                          />
                      </div>
                      <div>
-                         <label className="block text-sm font-medium text-blue-900 mb-1">WebサイトURL (任意)</label>
+                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">WebサイトURL (任意)</label>
+                         <div className="flex gap-2">
+                            <input 
+                               type="text" 
+                               className="flex-1 px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                               placeholder="https://example.com"
+                               value={researchUrl}
+                               onChange={(e) => setResearchUrl(e.target.value)}
+                            />
+                            <button 
+                               type="button"
+                               onClick={handleExtractSocialMedia}
+                               disabled={!researchUrl.trim()}
+                               className="px-3 py-2 bg-brand-primary text-white rounded-sm hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-serif-jp"
+                            >
+                               検索
+                            </button>
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                     <div>
+                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">Instagram (任意)</label>
                          <input 
                             type="text" 
-                            className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="https://example.com"
-                            value={researchUrl}
-                            onChange={(e) => setResearchUrl(e.target.value)}
+                            className="w-full px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                            placeholder="https://instagram.com/..."
+                            value={researchInstagram}
+                            onChange={(e) => setResearchInstagram(e.target.value)}
+                         />
+                     </div>
+                     <div>
+                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">X / Twitter (任意)</label>
+                         <input 
+                            type="text" 
+                            className="w-full px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                            placeholder="https://x.com/..."
+                            value={researchX}
+                            onChange={(e) => setResearchX(e.target.value)}
                          />
                      </div>
                  </div>
                  
                  {!researchResult ? (
                      <div className="flex justify-end">
-                         <Button type="button" variant="secondary" onClick={handleResearch} disabled={isResearching || !researchCompany} className="bg-blue-600 hover:bg-blue-700 text-white border-none">
+                         <Button type="button" variant="secondary" onClick={handleResearch} disabled={isResearching || !researchCompany} className="bg-brand-primary hover:bg-yellow-700 text-white border-none">
                              {isResearching ? 'リサーチ中...' : 'AIリサーチ実行'}
                          </Button>
                      </div>
                  ) : (
-                     <div className="bg-white rounded-md p-4 border border-blue-200 animate-fadeIn">
-                         <div className="flex justify-between items-start mb-2">
-                             <h4 className="font-bold text-blue-800">リサーチ結果</h4>
-                             <button type="button" onClick={() => setResearchResult(null)} className="text-xs text-gray-500 underline">リセット</button>
+                     <div className="bg-white rounded-sm p-4 border border-brand-accent animate-fadeIn">
+                         <div className="flex justify-between items-start mb-4">
+                             <h4 className="font-bold text-brand-secondary text-lg">📊 リサーチ結果</h4>
+                             <button type="button" onClick={() => setResearchResult(null)} className="text-xs text-brand-primary underline hover:text-yellow-700">リセット</button>
                          </div>
-                         <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto">
-                             {researchResult.summary}
+                         
+                         {/* Key Points Section */}
+                         <div className="bg-yellow-50 border-l-4 border-brand-primary rounded-sm p-3 mb-4">
+                             <h5 className="font-bold text-brand-secondary text-sm mb-2">📌 主要ポイント</h5>
+                             <div className="text-sm text-brand-secondary leading-relaxed">
+                                 {researchResult.summary.split('\n').slice(0, 3).map((line, i) => (
+                                     line.trim() && <div key={i} className="mb-1">• {line.trim()}</div>
+                                 ))}
+                             </div>
                          </div>
+                         
+                         {/* Full Summary Section */}
+                         <div className="mb-4">
+                             <h5 className="font-bold text-brand-secondary text-sm mb-2">📋 詳細情報</h5>
+                             <div className="bg-gray-50 rounded-sm p-3 max-h-48 overflow-y-auto border border-gray-200">
+                                 <div className="text-sm text-brand-secondary leading-relaxed whitespace-pre-wrap">
+                                     {researchResult.summary.split('\n').map((line, i) => (
+                                         <div key={i} className="mb-1">{line}</div>
+                                     ))}
+                                 </div>
+                             </div>
+                         </div>
+                         
                          {researchResult.extractedUrls && researchResult.extractedUrls.length > 0 && (
-                            <div className="mt-2 pt-2 border-t border-gray-100">
-                                <p className="text-xs text-gray-500 font-semibold">参照元:</p>
-                                <ul className="list-disc pl-4 text-xs text-blue-600 truncate">
-                                    {researchResult.extractedUrls.slice(0, 3).map((u, i) => (
-                                        <li key={i}><a href={u} target="_blank" rel="noopener noreferrer" className="hover:underline">{u}</a></li>
+                            <div className="pt-3 border-t border-gray-200">
+                                <p className="text-xs text-brand-secondary font-semibold mb-2">🔗 参照元:</p>
+                                <ul className="space-y-1">
+                                    {researchResult.extractedUrls.slice(0, 5).map((u, i) => (
+                                        <li key={i} className="text-xs"><a href={u} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline truncate block">{u}</a></li>
                                     ))}
                                 </ul>
                             </div>
@@ -237,24 +312,24 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
              </div>
         </div>
 
-        <div className="mb-8 border border-brand-light rounded-lg bg-white overflow-hidden shadow-sm">
-          <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center justify-between flex-wrap gap-2">
+        <div className="mb-8 border border-brand-light rounded-sm bg-white overflow-hidden shadow-sm">
+          <div className="bg-brand-bg border-b border-brand-accent px-4 py-3 flex items-center justify-between flex-wrap gap-2">
             <h3 className="text-lg font-semibold text-brand-secondary flex items-center">
               <SparklesIcon className="w-5 h-5 mr-2 text-brand-primary" />
               案件情報 AI自動入力
             </h3>
-            <div className="flex space-x-1 bg-gray-200 p-1 rounded-md">
+            <div className="flex space-x-1 bg-gray-200 p-1 rounded-sm">
                 <button
                     type="button"
                     onClick={() => setActiveTab('text')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${activeTab === 'text' ? 'bg-white text-brand-primary shadow' : 'text-gray-600 hover:text-gray-800'}`}
+                    className={`px-3 py-1.5 text-sm font-serif-jp font-serif-jp font-medium rounded-sm transition-colors flex items-center gap-2 ${activeTab === 'text' ? 'bg-white text-brand-primary shadow' : 'text-brand-light hover:text-gray-800'}`}
                 >
                     <span>テキスト</span>
                 </button>
                 <button
                     type="button"
                     onClick={() => setActiveTab('file')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${activeTab === 'file' ? 'bg-white text-brand-primary shadow' : 'text-gray-600 hover:text-gray-800'}`}
+                    className={`px-3 py-1.5 text-sm font-serif-jp font-serif-jp font-medium rounded-sm transition-colors flex items-center gap-2 ${activeTab === 'file' ? 'bg-white text-brand-primary shadow' : 'text-brand-light hover:text-gray-800'}`}
                 >
                     <DocumentTextIcon className="w-4 h-4" />
                     <span>ファイル(PDF)</span>
@@ -262,7 +337,7 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
                 <button
                     type="button"
                     onClick={() => setActiveTab('url')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${activeTab === 'url' ? 'bg-white text-brand-primary shadow' : 'text-gray-600 hover:text-gray-800'}`}
+                    className={`px-3 py-1.5 text-sm font-serif-jp font-serif-jp font-medium rounded-sm transition-colors flex items-center gap-2 ${activeTab === 'url' ? 'bg-white text-brand-primary shadow' : 'text-brand-light hover:text-gray-800'}`}
                 >
                     <GlobeAltIcon className="w-4 h-4" />
                     <span>URL</span>
@@ -270,10 +345,10 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
             </div>
           </div>
           
-          <div className="p-6 bg-green-50/30">
+          <div className="p-6 bg-brand-bg/30">
             {activeTab === 'text' && (
                 <div>
-                    <p className="text-sm text-gray-600 mb-3">メール本文や議事録などを貼り付けてください。</p>
+                    <p className="text-sm text-brand-light mb-3">メール本文や議事録などを貼り付けてください。</p>
                     <Textarea
                         id="raw-text-input"
                         label=""
@@ -291,9 +366,9 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
 
             {activeTab === 'file' && (
                 <div>
-                    <p className="text-sm text-gray-600 mb-3">企画書や参考資料のPDFをアップロードしてください。</p>
+                    <p className="text-sm text-brand-light mb-3">企画書や参考資料のPDFをアップロードしてください。</p>
                     <div 
-                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 bg-white ${isDragging ? 'border-brand-primary bg-green-50' : 'border-gray-300'}`}
+                        className={`border-2 border-dashed rounded-sm p-8 text-center transition-colors duration-200 bg-white ${isDragging ? 'border-brand-primary bg-brand-bg' : 'border-gray-300'}`}
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
                         onDragEnter={handleDragEnter}
@@ -308,11 +383,11 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
                         />
                         <label htmlFor="file-upload-tab" className="cursor-pointer flex flex-col items-center">
                             <DocumentTextIcon className="w-10 h-10 text-gray-400 mb-2"/>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-brand-light">
                                 <span className="font-semibold text-brand-primary">クリックしてアップロード</span> またはドラッグ＆ドロップ
                             </p>
                             {file ? (
-                                <p className="mt-2 text-sm font-medium text-brand-secondary bg-green-100 px-3 py-1 rounded-full">{file.name}</p>
+                                <p className="mt-2 text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary bg-green-100 px-3 py-1 rounded-full">{file.name}</p>
                             ) : (
                                 <p className="mt-1 text-xs text-gray-400">PDFファイル (最大 10MB)</p>
                             )}
@@ -323,14 +398,14 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
 
             {activeTab === 'url' && (
                 <div>
-                    <p className="text-sm text-gray-600 mb-3">参考製品や競合製品のWebページURLを入力してください。</p>
-                    <div className="relative rounded-md shadow-sm">
+                    <p className="text-sm text-brand-light mb-3">参考製品や競合製品のWebページURLを入力してください。</p>
+                    <div className="relative rounded-sm shadow-sm">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                             <GlobeAltIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
                         <input
                             type="text"
-                            className="block w-full rounded-md border-gray-300 pl-10 focus:border-brand-primary focus:ring-brand-primary sm:text-sm py-3 border"
+                            className="block w-full rounded-sm border-gray-300 pl-10 focus:border-brand-primary focus:ring-brand-primary sm:text-sm py-3 border"
                             placeholder="https://example.com/product"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
@@ -487,7 +562,7 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
           </div>
         </div>
         
-        <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+        <div className="mt-8 pt-6 border-t border-brand-accent flex justify-between items-center">
            <Button type="button" variant="outline" onClick={onBack}>
             トップに戻る
           </Button>

@@ -32,7 +32,7 @@ const ExtractedDataEditor: React.FC<ExtractedDataEditorProps> = ({ initialData, 
   return (
     <form onSubmit={handleSubmit}>
       <Card title="抽出された情報を確認">
-        <p className="mb-6 text-gray-600 bg-yellow-50 border border-yellow-200 p-3 rounded-md">
+        <p className="mb-6 text-brand-light bg-yellow-50 border border-yellow-200 p-3 rounded-sm">
           AIが以下の情報を抽出しました。内容を確認・編集し、確定してください。黄色でハイライトされた項目はAIの確信度が低いため、特に注意してご確認ください。
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
@@ -160,7 +160,7 @@ const ExtractedDataEditor: React.FC<ExtractedDataEditorProps> = ({ initialData, 
           </div>
         </div>
         
-        <div className="mt-8 pt-6 border-t border-gray-200 flex justify-between items-center">
+        <div className="mt-8 pt-6 border-t border-brand-accent flex justify-between items-center">
           <Button type="button" variant="outline" onClick={onBack}>
             戻る
           </Button>

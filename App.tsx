@@ -115,7 +115,7 @@ const App: React.FC = () => {
 
     switch (appState) {
       case 'DASHBOARD':
-        return <Dashboard onStartNewProposal={handleStartNewProposal} />;
+        return <Dashboard onStartNewProposal={handleStartNewProposal} onNavigateToDatabase={() => handleNavigate('DATABASE')} />;
       case 'FORM_INPUT':
         // Pass inquiryData as initialData so that when going back, the form is populated
         return <StructuredForm onSubmit={handleFormSubmit} onBack={resetState} initialData={inquiryData || undefined} />;
@@ -124,12 +124,12 @@ const App: React.FC = () => {
       case 'PROPOSAL_VIEW':
         return selectedProposal && <ProposalDetailView proposal={selectedProposal} onBack={() => setAppState('MATCHING_RESULTS')} />;
       default:
-        return <Dashboard onStartNewProposal={handleStartNewProposal} />;
+        return <Dashboard onStartNewProposal={handleStartNewProposal} onNavigateToDatabase={() => handleNavigate('DATABASE')} />;
     }
   };
 
   return (
-    <div className="bg-brand-bg min-h-screen text-gray-800 font-sans">
+    <div className="bg-brand-bg min-h-screen text-brand-secondary font-serif-jp">
       <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {renderContent()}

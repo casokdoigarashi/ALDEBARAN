@@ -21,7 +21,7 @@ const TagInput: React.FC<TagInputProps> = ({ label, options, selectedOptions, on
 
   return (
     <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-serif-jp font-medium text-brand-secondary mb-2">
         {label}
         {isLowConfidence && <span className="text-yellow-600 text-xs ml-2">(要確認)</span>}
       </label>
@@ -33,10 +33,10 @@ const TagInput: React.FC<TagInputProps> = ({ label, options, selectedOptions, on
               key={option}
               type="button"
               onClick={() => handleToggle(option)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 ${
+              className={`px-3 py-1.5 rounded-full text-sm font-serif-jp font-medium transition-colors duration-200 ${
                 isSelected
                   ? 'bg-brand-primary text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  : 'bg-gray-200 text-brand-secondary hover:bg-gray-300'
               }`}
             >
               {option}
