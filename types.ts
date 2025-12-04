@@ -4,7 +4,10 @@ export type AppState =
   | 'FORM_INPUT'
   | 'MATCHING_RESULTS'
   | 'PROPOSAL_VIEW'
-  | 'MATERIAL_DB'; // Added for Material Database View
+  | 'MATERIAL_DB'
+  | 'PROPOSALS_LIST'
+  | 'PROPOSAL_DETAIL'
+  | 'REPORTS';
 
 export interface FormFieldData<T> {
   value: T;
@@ -58,8 +61,6 @@ export interface Material {
   origin: string; // Added: Production area/region
   country: string; // Added: Country of origin
   sustainability: string;
-  isOrganic?: boolean; // Added: Organic certification flag
-  organicCertifications?: string[]; // Added: Organic certification types
 }
 
 export interface ScoredProposal {

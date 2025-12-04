@@ -53,8 +53,6 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
   // Client Research State
   const [researchCompany, setResearchCompany] = useState('');
   const [researchUrl, setResearchUrl] = useState('');
-  const [researchInstagram, setResearchInstagram] = useState('');
-  const [researchX, setResearchX] = useState('');
   const [isResearching, setIsResearching] = useState(false);
   const [researchResult, setResearchResult] = useState<ClientResearch | null>(initialData?.clientResearch || null);
 
@@ -103,21 +101,6 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
       // In a real app, show an error toast
     } finally {
       setIsParsing(false);
-    }
-  };
-
-  const handleExtractSocialMedia = async () => {
-    if (!researchUrl.trim()) return;
-    try {
-      // Extract Instagram and X links from website
-      const response = await fetch(`/api/extract-social-media?url=${encodeURIComponent(researchUrl)}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.instagram) setResearchInstagram(data.instagram);
-        if (data.x) setResearchX(data.x);
-      }
-    } catch (error) {
-      console.error('Failed to extract social media links:', error);
     }
   };
 
@@ -201,11 +184,6 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
                  <p className="text-sm text-brand-secondary mb-4">
                      クライアントの会社名やURLを入力すると、最新のニュースやSNS、ブランド動向をリサーチし、提案内容に反映させます。
                  </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-sm p-3 mb-4">
-                    <p className="text-xs text-blue-700 font-serif-jp">
-                        <strong>💡 「検索」ボタンについて：</strong> Web サイト URL を入力して「検索」ボタンをクリックすると、そのサイトから Instagram と X のリンクを自動検出して入力します。
-                    </p>
-                </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                      <div>
                          <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">会社名 / ブランド名</label>
@@ -219,45 +197,12 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
                      </div>
                      <div>
                          <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">WebサイトURL (任意)</label>
-                         <div className="flex gap-2">
-                            <input 
-                               type="text" 
-                               className="flex-1 px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                               placeholder="https://example.com"
-                               value={researchUrl}
-                               onChange={(e) => setResearchUrl(e.target.value)}
-                            />
-                            <button 
-                               type="button"
-                               onClick={handleExtractSocialMedia}
-                               disabled={!researchUrl.trim()}
-                               className="px-3 py-2 bg-brand-primary text-white rounded-sm hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-serif-jp"
-                            >
-                               検索
-                            </button>
-                         </div>
-                     </div>
-                 </div>
-                 
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                     <div>
-                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">Instagram (任意)</label>
                          <input 
                             type="text" 
                             className="w-full px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                            placeholder="https://instagram.com/..."
-                            value={researchInstagram}
-                            onChange={(e) => setResearchInstagram(e.target.value)}
-                         />
-                     </div>
-                     <div>
-                         <label className="block text-sm font-serif-jp font-serif-jp font-medium text-brand-secondary mb-1">X / Twitter (任意)</label>
-                         <input 
-                            type="text" 
-                            className="w-full px-3 py-2 border border-brand-accent rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                            placeholder="https://x.com/..."
-                            value={researchX}
-                            onChange={(e) => setResearchX(e.target.value)}
+                            placeholder="https://example.com"
+                            value={researchUrl}
+                            onChange={(e) => setResearchUrl(e.target.value)}
                          />
                      </div>
                  </div>
@@ -270,39 +215,19 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
                      </div>
                  ) : (
                      <div className="bg-white rounded-sm p-4 border border-brand-accent animate-fadeIn">
-                         <div className="flex justify-between items-start mb-4">
-                             <h4 className="font-bold text-brand-secondary text-lg">📊 リサーチ結果</h4>
-                             <button type="button" onClick={() => setResearchResult(null)} className="text-xs text-brand-primary underline hover:text-yellow-700">リセット</button>
+                         <div className="flex justify-between items-start mb-2">
+                             <h4 className="font-bold text-brand-secondary">リサーチ結果</h4>
+                             <button type="button" onClick={() => setResearchResult(null)} className="text-xs text-brand-bg0 underline">リセット</button>
                          </div>
-                         
-                         {/* Key Points Section */}
-                         <div className="bg-yellow-50 border-l-4 border-brand-primary rounded-sm p-3 mb-4">
-                             <h5 className="font-bold text-brand-secondary text-sm mb-2">📌 主要ポイント</h5>
-                             <div className="text-sm text-brand-secondary leading-relaxed">
-                                 {researchResult.summary.split('\n').slice(0, 3).map((line, i) => (
-                                     line.trim() && <div key={i} className="mb-1">• {line.trim()}</div>
-                                 ))}
-                             </div>
+                         <div className="prose prose-sm max-w-none text-brand-secondary whitespace-pre-wrap max-h-40 overflow-y-auto">
+                             {researchResult.summary}
                          </div>
-                         
-                         {/* Full Summary Section */}
-                         <div className="mb-4">
-                             <h5 className="font-bold text-brand-secondary text-sm mb-2">📋 詳細情報</h5>
-                             <div className="bg-gray-50 rounded-sm p-3 max-h-48 overflow-y-auto border border-gray-200">
-                                 <div className="text-sm text-brand-secondary leading-relaxed whitespace-pre-wrap">
-                                     {researchResult.summary.split('\n').map((line, i) => (
-                                         <div key={i} className="mb-1">{line}</div>
-                                     ))}
-                                 </div>
-                             </div>
-                         </div>
-                         
                          {researchResult.extractedUrls && researchResult.extractedUrls.length > 0 && (
-                            <div className="pt-3 border-t border-gray-200">
-                                <p className="text-xs text-brand-secondary font-semibold mb-2">🔗 参照元:</p>
-                                <ul className="space-y-1">
-                                    {researchResult.extractedUrls.slice(0, 5).map((u, i) => (
-                                        <li key={i} className="text-xs"><a href={u} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline truncate block">{u}</a></li>
+                            <div className="mt-2 pt-2 border-t border-gray-100">
+                                <p className="text-xs text-brand-bg0 font-semibold">参照元:</p>
+                                <ul className="list-disc pl-4 text-xs text-brand-primary truncate">
+                                    {researchResult.extractedUrls.slice(0, 3).map((u, i) => (
+                                        <li key={i}><a href={u} target="_blank" rel="noopener noreferrer" className="hover:underline">{u}</a></li>
                                     ))}
                                 </ul>
                             </div>

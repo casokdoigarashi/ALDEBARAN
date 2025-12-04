@@ -1,16 +1,21 @@
 
 import React, { useState, useCallback } from 'react';
 import { AppState, InquiryData, ScoredProposal, FullProposal, Material } from './types';
+import { useAuth } from './contexts/AuthContext';
 import Header from './components/common/Header';
+import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 import StructuredForm from './components/StructuredForm';
 import MatchingResults from './components/MatchingResults';
 import ProposalDetailView from './components/ProposalDetailView';
+import ProposalsList from './components/ProposalsList';
+import ReportsPage from './components/ReportsPage';
 import MaterialDatabase from './components/MaterialDatabase';
 import Loader from './components/common/Loader';
 
 
 const App: React.FC = () => {
+  const { user, token, login, logout, isAuthenticated } = useAuth();
   const [appState, setAppState] = useState<AppState>('DASHBOARD');
   // Navigation View State (Concierge vs DB)
   const [currentView, setCurrentView] = useState<'CONCIERGE' | 'DATABASE'>('CONCIERGE');
@@ -18,6 +23,7 @@ const App: React.FC = () => {
   const [inquiryData, setInquiryData] = useState<InquiryData | null>(null);
   const [scoredProposals, setScoredProposals] = useState<ScoredProposal[]>([]);
   const [selectedProposal, setSelectedProposal] = useState<FullProposal | null>(null);
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
 
@@ -54,11 +60,48 @@ const App: React.FC = () => {
     setInquiryData(null);
     setScoredProposals([]);
     setSelectedProposal(null);
+    setSelectedProposalId(null);
     setIsLoading(false);
     setLoadingMessage('');
   }, []);
 
   const handleStartNewProposal = () => setAppState('FORM_INPUT');
+
+  const handleViewProposals = () => setAppState('PROPOSALS_LIST');
+
+  const handleViewReports = () => setAppState('REPORTS');
+
+  const handleSelectProposalFromList = async (proposalId: string) => {
+    setIsLoading(true);
+    setLoadingMessage('提案書を読み込み中...');
+    
+    try {
+      const response = await fetch(`/api/proposals/${proposalId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('提案書の読み込みに失敗しました');
+      }
+
+      const data = await response.json();
+      const proposal = data.proposal;
+
+      // JSON フィールドをパース
+      const proposalContent = JSON.parse(proposal.proposal_content || '{}');
+      
+      setSelectedProposal(proposalContent);
+      setSelectedProposalId(proposalId);
+      setAppState('PROPOSAL_DETAIL');
+    } catch (error) {
+      alert('提案書の読み込みに失敗しました');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleFormSubmit = async (data: InquiryData) => {
     setIsLoading(true);
@@ -89,6 +132,7 @@ const App: React.FC = () => {
         // Pass materials to the AI logic
         const fullProposal = await generateFullProposal(proposal.id, materials);
         setSelectedProposal(fullProposal);
+        setSelectedProposalId(proposal.id);
         setAppState('PROPOSAL_VIEW');
     } catch (error) {
         console.error("Proposal generation error:", error);
@@ -96,6 +140,11 @@ const App: React.FC = () => {
     } finally {
         setIsLoading(false);
     }
+  };
+
+  const handleSaveProposal = async (proposalId: string, proposal: FullProposal) => {
+    // Already saved in ProposalDetailView
+    console.log('Proposal saved:', proposalId);
   };
 
   const handleAddMaterial = (newMaterial: Material) => {
@@ -115,22 +164,33 @@ const App: React.FC = () => {
 
     switch (appState) {
       case 'DASHBOARD':
-        return <Dashboard onStartNewProposal={handleStartNewProposal} onNavigateToDatabase={() => handleNavigate('DATABASE')} />;
+        return <Dashboard onStartNewProposal={handleStartNewProposal} onViewProposals={handleViewProposals} />;
       case 'FORM_INPUT':
         // Pass inquiryData as initialData so that when going back, the form is populated
         return <StructuredForm onSubmit={handleFormSubmit} onBack={resetState} initialData={inquiryData || undefined} />;
       case 'MATCHING_RESULTS':
         return <MatchingResults proposals={scoredProposals} onSelect={handleSelectProposal} onBack={() => setAppState('FORM_INPUT')} />;
       case 'PROPOSAL_VIEW':
-        return selectedProposal && <ProposalDetailView proposal={selectedProposal} onBack={() => setAppState('MATCHING_RESULTS')} />;
+        return selectedProposal && <ProposalDetailView proposal={selectedProposal} onBack={() => setAppState('MATCHING_RESULTS')} proposalId={selectedProposalId || undefined} onSave={handleSaveProposal} />;
+      case 'PROPOSALS_LIST':
+        return <ProposalsList onSelectProposal={handleSelectProposalFromList} onNewProposal={handleStartNewProposal} />;
+      case 'PROPOSAL_DETAIL':
+        return selectedProposal && <ProposalDetailView proposal={selectedProposal} onBack={() => setAppState('PROPOSALS_LIST')} proposalId={selectedProposalId || undefined} onSave={handleSaveProposal} />;
+      case 'REPORTS':
+        return <ReportsPage onBack={resetState} />;
       default:
-        return <Dashboard onStartNewProposal={handleStartNewProposal} onNavigateToDatabase={() => handleNavigate('DATABASE')} />;
+        return <Dashboard onStartNewProposal={handleStartNewProposal} onViewProposals={handleViewProposals} />;
     }
   };
 
+  // ログインしていない場合はログインページを表示
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={login} />;
+  }
+
   return (
     <div className="bg-brand-bg min-h-screen text-brand-secondary font-serif-jp">
-      <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} />
+      <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} onLogout={logout} user={user} onViewReports={handleViewReports} />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {renderContent()}
       </main>

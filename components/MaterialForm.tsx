@@ -20,7 +20,6 @@ type InputTab = 'manual' | 'text' | 'file' | 'url';
 const MaterialForm: React.FC<MaterialFormProps> = ({ onSave, onCancel }) => {
   const [activeTab, setActiveTab] = useState<InputTab>('manual');
   const [isParsing, setIsParsing] = useState(false);
-  const [parsingStatus, setParsingStatus] = useState('');
   
   // Input contents for AI
   const [rawText, setRawText] = useState('');
@@ -41,26 +40,10 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ onSave, onCancel }) => {
       price: '',
       origin: '',
       country: '',
-      sustainability: '',
-      isOrganic: false,
-      organicCertifications: []
+      sustainability: ''
   });
   
   const [benefitsString, setBenefitsString] = useState('');
-  const [selectedCertifications, setSelectedCertifications] = useState<string[]>([]);
-
-  const organicCertificationOptions = [
-    'COSMOS',
-    'ECOCERT',
-    'USDA Organic',
-    'JAS (Japan Agricultural Standards)',
-    'EU Organic',
-    'Natrue',
-    'Demeter',
-    'IFOAM',
-    'Soil Association',
-    'ACO (Australian Certified Organic)'
-  ];
 
   const handleChange = (field: keyof Omit<Material, 'id' | 'benefits'>, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -71,72 +54,29 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ onSave, onCancel }) => {
       setFormData(prev => ({ ...prev, benefits: value.split(',').map(s => s.trim()).filter(s => s) }));
   };
 
-  const handleCertificationToggle = (cert: string) => {
-    setSelectedCertifications(prev => {
-      const updated = prev.includes(cert) ? prev.filter(c => c !== cert) : [...prev, cert];
-      setFormData(prev => ({ ...prev, organicCertifications: updated }));
-      return updated;
-    });
-  };
-
-  const handleOrganicToggle = () => {
-    setFormData(prev => ({ ...prev, isOrganic: !prev.isOrganic }));
-  };
-
   const handleAnalyze = async () => {
-    // Validation
-    if (activeTab === 'text' && !rawText.trim()) {
-        alert('テキストを入力してください');
-        return;
-    }
-    if (activeTab === 'file' && !file) {
-        alert('PDFファイルを選択してください');
-        return;
-    }
-    if (activeTab === 'url' && !url.trim()) {
-        alert('URLを入力してください');
-        return;
-    }
-
     setIsParsing(true);
-    setParsingStatus('情報を取得中...');
-    
     try {
         const { parseMaterialData } = await import('../services/apiService');
         let parsedData = null;
-
-        setParsingStatus('AIが情報を分析中...');
 
         if (activeTab === 'text' && rawText.trim()) {
             parsedData = await parseMaterialData(rawText, 'text');
         } else if (activeTab === 'file' && file) {
             parsedData = await parseMaterialData(file, 'file');
         } else if (activeTab === 'url' && url.trim()) {
-            setParsingStatus('Webページから情報を抽出中...');
             parsedData = await parseMaterialData(url, 'url');
         }
 
         if (parsedData) {
-            setParsingStatus('フォームに入力中...');
             setFormData(prev => ({ ...prev, ...parsedData }));
             setBenefitsString(parsedData.benefits ? parsedData.benefits.join(', ') : '');
-            setSelectedCertifications(parsedData.organicCertifications || []);
-            
             // Switch to manual view to edit/confirm results
-            setTimeout(() => {
-                setActiveTab('manual');
-                setParsingStatus('');
-                alert('情報の抽出が完了しました！');
-            }, 500);
-        } else {
-            setParsingStatus('');
-            alert('情報を抽出できませんでした。入力内容を確認してください。');
+            setActiveTab('manual');
         }
     } catch (error) {
         console.error("Analysis failed", error);
-        const errorMessage = error instanceof Error ? error.message : '詳細はコンソールを確認してください';
-        alert(`情報の抽出に失敗しました。\n${errorMessage}`);
-        setParsingStatus('');
+        alert("情報の抽出に失敗しました。");
     } finally {
         setIsParsing(false);
     }
@@ -225,22 +165,6 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ onSave, onCancel }) => {
                         />
                     </div>
                 )}
-                
-                {/* Loading Status */}
-                {isParsing && (
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="animate-spin">
-                                <SparklesIcon className="w-5 h-5 text-brand-primary" />
-                            </div>
-                            <div>
-                                <p className="font-serif-jp font-medium text-brand-primary">{parsingStatus || '処理中...'}</p>
-                                <p className="text-sm text-gray-600">少々お待ちください</p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-                
                 <div className="mt-4 flex justify-end">
                     <Button type="button" onClick={handleAnalyze} disabled={isParsing} className="flex items-center gap-2">
                         <SparklesIcon className="w-5 h-5" />
@@ -280,43 +204,6 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ onSave, onCancel }) => {
                 </div>
                  <div className="col-span-full">
                      <Input label="サステナビリティ情報" id="sustainability" value={formData.sustainability} onChange={(e) => handleChange('sustainability', e.target.value)} placeholder="例: COSMOS認証取得, パームフリー" />
-                </div>
-
-                {/* Organic Certification Section */}
-                <div className="col-span-full">
-                    <div className="bg-brand-bg p-4 rounded-sm">
-                        <div className="flex items-center gap-3 mb-4">
-                            <input 
-                                type="checkbox" 
-                                id="isOrganic" 
-                                checked={formData.isOrganic || false}
-                                onChange={handleOrganicToggle}
-                                className="w-4 h-4 text-brand-primary rounded border-gray-300 cursor-pointer"
-                            />
-                            <label htmlFor="isOrganic" className="font-serif-jp font-medium text-brand-primary cursor-pointer">
-                                オーガニック原料
-                            </label>
-                        </div>
-                        
-                        {formData.isOrganic && (
-                            <div>
-                                <p className="font-serif-jp font-medium text-sm text-gray-700 mb-3">認証機関 (複数選択可)</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {organicCertificationOptions.map((cert) => (
-                                        <label key={cert} className="flex items-center gap-2 cursor-pointer">
-                                            <input 
-                                                type="checkbox" 
-                                                checked={selectedCertifications.includes(cert)}
-                                                onChange={() => handleCertificationToggle(cert)}
-                                                className="w-4 h-4 text-brand-primary rounded border-gray-300 cursor-pointer"
-                                            />
-                                            <span className="text-sm text-gray-700 font-serif-jp">{cert}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
                 </div>
             </div>
 
