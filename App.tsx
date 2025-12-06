@@ -46,11 +46,18 @@ const App: React.FC = () => {
       }
   ]);
   
-  const handleNavigate = (view: 'CONCIERGE' | 'DATABASE') => {
-      setCurrentView(view);
+  const handleNavigate = (view: 'CONCIERGE' | 'DATABASE' | 'PROPOSALS_LIST' | 'REPORTS') => {
       if (view === 'DATABASE') {
+          setCurrentView('DATABASE');
           setAppState('MATERIAL_DB');
+      } else if (view === 'PROPOSALS_LIST') {
+          setCurrentView('CONCIERGE');
+          setAppState('PROPOSALS_LIST');
+      } else if (view === 'REPORTS') {
+          setCurrentView('CONCIERGE');
+          setAppState('REPORTS');
       } else {
+          setCurrentView(view);
           setAppState('DASHBOARD');
       }
   };
@@ -190,7 +197,7 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-brand-bg min-h-screen text-brand-secondary font-serif-jp">
-      <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} onLogout={logout} user={user} onViewReports={handleViewReports} />
+      <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {renderContent()}
       </main>

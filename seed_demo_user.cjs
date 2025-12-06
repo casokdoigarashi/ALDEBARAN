@@ -1,5 +1,5 @@
-const db = require('../db.cjs');
-const { hashPassword } = require('../auth.cjs');
+const db = require('./db.cjs');
+const { hashPassword } = require('./auth.cjs');
 
 async function seedDemoUser() {
   try {

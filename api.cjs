@@ -50,19 +50,24 @@ router.post('/auth/register', async (req, res) => {
 router.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt:', { email, password: password ? '***' : 'empty' });
 
     if (!email || !password) {
+      console.log('Missing email or password');
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
     // ユーザーを検索
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    console.log('User found:', user ? 'yes' : 'no');
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // パスワードを検証
+    console.log('Verifying password...');
     const isValid = await verifyPassword(password, user.password);
+    console.log('Password valid:', isValid);
     if (!isValid) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
