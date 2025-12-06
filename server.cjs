@@ -122,7 +122,14 @@ console.log('API Key injected successfully');
 });
 
 // 静的ファイルを提供（index.html 以外）
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'dist'), {
+  setHeaders: (res, path) => {
+    // Disable caching for all files
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+}));
 
 // その他のすべてのリクエストに対して index.html を返す（SPA のため）
 app.use((req, res) => {
