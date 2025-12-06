@@ -23,10 +23,13 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({
   const [showExportMenu, setShowExportMenu] = useState(false);
 
   const handleSave = async () => {
-    if (!proposalId || !onSave) return;
+    if (!onSave) return;
 
     setSaving(true);
     try {
+      // Generate a unique ID if not provided
+      const saveId = proposalId || `proposal-${Date.now()}`;
+      
       const response = await fetch('/api/proposals', {
         method: 'POST',
         headers: {
@@ -34,11 +37,12 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          id: proposalId,
-          clientName: proposal.jp.clientResearch?.companyName || 'Unknown',
-          websiteUrl: proposal.jp.clientResearch?.websiteUrl || '',
+          id: saveId,
+          clientName: proposal.jp.productName || 'Untitled Proposal',
+          websiteUrl: '',
           proposalContent: proposal,
-          researchData: proposal.jp.clientResearch
+          researchData: {},
+          formData: {}
         })
       });
 
@@ -46,9 +50,10 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({
         throw new Error('保存に失敗しました');
       }
 
+      const savedProposal = await response.json();
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-      onSave(proposalId, proposal);
+      onSave(saveId, proposal);
     } catch (error) {
       alert('提案書の保存に失敗しました');
       console.error(error);
