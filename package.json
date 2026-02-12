@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@google/genai": "^1.24.0",
+    "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.5.0",
+    "cheerio": "^1.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
