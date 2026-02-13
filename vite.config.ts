@@ -10,6 +10,12 @@ export default defineConfig(({ mode }) => {
         host: '0.0.0.0',
         middlewareMode: false,
         allowedHosts: 'all',
+        proxy: {
+          '/api': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+        },
       },
       plugins: [react()],
       preview: {
