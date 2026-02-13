@@ -349,6 +349,12 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
           </div>
         </div>
         
+        {/* 製品情報セクション */}
+        <div className="mb-6 p-6 bg-brand-light border-2 border-brand-accent rounded-lg shadow-sm">
+          <h3 className="text-xl font-semibold mb-4 text-brand-primary flex items-center gap-2">
+            📦 製品情報
+          </h3>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
           {/* Column 1 */}
           <div>
@@ -485,6 +491,7 @@ const StructuredForm: React.FC<StructuredFormProps> = ({ onSubmit, onBack, initi
               required
             />
           </div>
+        </div>
         </div>
         
         <div className="mt-8 pt-6 border-t border-brand-accent flex justify-between items-center">
