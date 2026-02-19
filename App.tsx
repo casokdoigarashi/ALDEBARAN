@@ -196,7 +196,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-brand-bg min-h-screen text-brand-secondary font-serif-jp">
+    <div className="bg-brand-bg min-h-screen text-brand-secondary font-sans">
       <Header onLogoClick={resetState} onNavigate={handleNavigate} currentView={currentView} />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {renderContent()}

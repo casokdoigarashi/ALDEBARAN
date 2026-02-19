@@ -1,27 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI OEM コンシェルジュ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
               'brand-primary': '#C9A961',
-              'brand-secondary': '#2C2C2C',
-              'brand-light': '#8B8B7A',
-              'brand-accent': '#D4C5B0',
-              'brand-bg': '#F5F3F0',
+              'brand-primary-light': '#E8D5A0',
+              'brand-primary-dark': '#A8883E',
+              'brand-secondary': '#1E1E2E',
+              'brand-light': '#6B7280',
+              'brand-accent': '#E5E1DB',
+              'brand-bg': '#FAFAF8',
+              'brand-surface': '#FFFFFF',
+              'brand-muted': '#F3F2EF',
             },
             fontFamily: {
-              'serif': ['Georgia', 'Garamond', 'serif'],
-              'serif-jp': ["'Noto Serif JP'", 'serif'],
+              'sans': ['Inter', "'Noto Sans JP'", 'system-ui', 'sans-serif'],
               'display': ['Playfair Display', 'serif'],
+            },
+            borderRadius: {
+              'xl': '0.75rem',
+              '2xl': '1rem',
+              '3xl': '1.5rem',
+            },
+            boxShadow: {
+              'soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
+              'card': '0 4px 16px rgba(0, 0, 0, 0.06)',
+              'card-hover': '0 8px 32px rgba(0, 0, 0, 0.1)',
+              'elevated': '0 12px 40px rgba(0, 0, 0, 0.12)',
+              'glow': '0 0 24px rgba(201, 169, 97, 0.15)',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.4s ease-out',
+              'slide-up': 'slideUp 0.4s ease-out',
+              'slide-down': 'slideDown 0.3s ease-out',
+              'scale-in': 'scaleIn 0.3s ease-out',
+              'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { opacity: '0', transform: 'translateY(12px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              slideDown: {
+                '0%': { opacity: '0', transform: 'translateY(-8px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              scaleIn: {
+                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
+              },
+              pulseSoft: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0.7' },
+              },
             },
           },
         },
@@ -29,6 +75,39 @@
     </script>
 
 <style>
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Smooth scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D4C5B0;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #C9A961;
+  }
+
+  /* Selection color */
+  ::selection {
+    background: rgba(201, 169, 97, 0.2);
+    color: #1E1E2E;
+  }
+
+  /* Focus ring style */
+  *:focus-visible {
+    outline: 2px solid #C9A961;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   @media print {
     body * {
       visibility: hidden;
@@ -51,7 +130,7 @@
   }
 </style>
 </head>
-  <body>
+  <body class="bg-brand-bg">
     <script>
       // Polyfill 'process' for the browser environment. The @google/genai library
       // may depend on this object, which is not available in browsers by default.
@@ -59,7 +138,7 @@
       if (typeof window.process === 'undefined') {
         window.process = { env: {} };
       }
-      
+
       // Set API key from meta tag or global variable
       const apiKey = document.querySelector('meta[name="gemini-api-key"]')?.getAttribute('content') || window.__GEMINI_API_KEY__;
       if (apiKey) {
