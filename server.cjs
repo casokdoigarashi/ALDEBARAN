@@ -9,6 +9,7 @@ require('dotenv').config();
 // データベースと API ルーターをインポート
 const db = require('./db.cjs');
 const apiRouter = require('./api.cjs');
+const emailApiRouter = require('./api_email.cjs');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // API ルーターをマウント
 app.use('/api', apiRouter);
+app.use('/api/email', emailApiRouter);
 
 // Instagram と X のリンクを自動検出するエンドポイント
 app.get('/api/extract-social-media', async (req, res) => {

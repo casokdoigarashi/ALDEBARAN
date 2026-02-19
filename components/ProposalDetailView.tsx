@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FullProposal } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { downloadProposalAsPdf, downloadProposalAsHtml } from '../services/pdfService';
+import { regenerateEmailDraft, saveEmailDraft } from '../services/emailService';
 import Button from './common/Button';
+import EmailDraftEditor from './EmailDraftEditor';
 
 interface ProposalDetailViewProps {
   proposal: FullProposal;
@@ -306,28 +308,73 @@ const ProposalDetailView: React.FC<ProposalDetailViewProps> = ({
             </h2>
             <div className="space-y-4">
               {content.emailDrafts.standard && (
-                <div className="p-4 bg-brand-bg rounded">
-                  <h3 className="font-semibold text-brand-secondary mb-2">標準版</h3>
-                  <p className="text-sm text-brand-secondary whitespace-pre-wrap">
-                    {content.emailDrafts.standard}
-                  </p>
-                </div>
+                <EmailDraftEditor
+                  title="標準版"
+                  initialContent={content.emailDrafts.standard}
+                  draftType="standard"
+                  proposalId={proposalId || ''}
+                  onRegenerate={async (draftType, tone) => {
+                    return await regenerateEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      tone,
+                      content.emailDrafts[draftType as 'standard' | 'formal' | 'casual']
+                    );
+                  }}
+                  onSave={async (draftType, newContent) => {
+                    await saveEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      newContent
+                    );
+                  }}
+                />
               )}
               {content.emailDrafts.formal && (
-                <div className="p-4 bg-brand-bg rounded">
-                  <h3 className="font-semibold text-brand-secondary mb-2">フォーマル版</h3>
-                  <p className="text-sm text-brand-secondary whitespace-pre-wrap">
-                    {content.emailDrafts.formal}
-                  </p>
-                </div>
+                <EmailDraftEditor
+                  title="フォーマル版"
+                  initialContent={content.emailDrafts.formal}
+                  draftType="formal"
+                  proposalId={proposalId || ''}
+                  onRegenerate={async (draftType, tone) => {
+                    return await regenerateEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      tone,
+                      content.emailDrafts[draftType as 'standard' | 'formal' | 'casual']
+                    );
+                  }}
+                  onSave={async (draftType, newContent) => {
+                    await saveEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      newContent
+                    );
+                  }}
+                />
               )}
               {content.emailDrafts.casual && (
-                <div className="p-4 bg-brand-bg rounded">
-                  <h3 className="font-semibold text-brand-secondary mb-2">カジュアル版</h3>
-                  <p className="text-sm text-brand-secondary whitespace-pre-wrap">
-                    {content.emailDrafts.casual}
-                  </p>
-                </div>
+                <EmailDraftEditor
+                  title="カジュアル版"
+                  initialContent={content.emailDrafts.casual}
+                  draftType="casual"
+                  proposalId={proposalId || ''}
+                  onRegenerate={async (draftType, tone) => {
+                    return await regenerateEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      tone,
+                      content.emailDrafts[draftType as 'standard' | 'formal' | 'casual']
+                    );
+                  }}
+                  onSave={async (draftType, newContent) => {
+                    await saveEmailDraft(
+                      proposalId || '',
+                      draftType as 'standard' | 'formal' | 'casual',
+                      newContent
+                    );
+                  }}
+                />
               )}
             </div>
           </section>
