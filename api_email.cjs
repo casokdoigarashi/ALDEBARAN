@@ -41,7 +41,7 @@ ${currentContent}
 
     // Gemini APIを呼び出し
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,17 +93,17 @@ router.post('/save-email', authMiddleware, async (req, res) => {
     const db = require('./db.cjs');
 
     // 提案書の存在確認
-    const proposal = db.prepare('SELECT id, content FROM proposals WHERE id = ?').get(proposalId);
+    const proposal = db.prepare('SELECT id, proposal_content FROM proposals WHERE id = ?').get(proposalId);
     if (!proposal) {
       return res.status(404).json({ error: 'Proposal not found' });
     }
 
-    // contentをJSONとしてパース
+    // proposal_contentをJSONとしてパース
     let proposalContent;
     try {
-      proposalContent = typeof proposal.content === 'string' 
-        ? JSON.parse(proposal.content) 
-        : proposal.content;
+      proposalContent = typeof proposal.proposal_content === 'string' 
+        ? JSON.parse(proposal.proposal_content) 
+        : proposal.proposal_content;
     } catch (e) {
       return res.status(500).json({ error: 'Invalid proposal content format' });
     }
@@ -121,7 +121,7 @@ router.post('/save-email', authMiddleware, async (req, res) => {
     proposalContent.emailDrafts[draftType] = content;
 
     // データベースに保存
-    db.prepare('UPDATE proposals SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+    db.prepare('UPDATE proposals SET proposal_content = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
       .run(JSON.stringify(proposalContent), proposalId);
 
     res.json({
